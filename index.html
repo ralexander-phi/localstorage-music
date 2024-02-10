@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>LocalStorage Audio</title>
+    <!--
+    <link rel="stylesheet" href="./style.css">
+    -->
+  </head>
+  <body>
+    <main>
+      <h1>LocalStorage Audio</h1>
+      <audio controls id="player"></audio>
+      <h5 id="playing"></h5>
+
+      <br />
+      <br />
+      <br />
+
+      <hr />
+
+      <br />
+      <br />
+      <br />
+
+      <div id="listing"></div>
+
+      <br />
+      <br />
+      <br />
+
+      <hr />
+      <p>Load a song from disk:
+      <input type="file" id="song-from-file" accept="audio/*,.mp4,.mp3" />
+      </p>
+    </main>
+  </body>
+
+  <script src="assets/localforage.min.js"></script>
+	<script src="index.js"></script>
+</html>
+
