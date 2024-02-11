@@ -1,3 +1,12 @@
+var statusDiv = document.getElementById('status');
+statusDiv.innerText = "Script loading...";
+
+
+var audio = document.getElementById("player");
+var listing = document.getElementById('listing');
+var nameField = document.getElementById('song-name');
+var urlField = document.getElementById('song-url');
+
 function loadSongFromFile(e) {
   var file = e.target.files[0];
   if (!file) {
@@ -8,67 +17,97 @@ function loadSongFromFile(e) {
   reader.onload = function(e) {
     var contents = e.target.result;
     var filename = e.target.fileName;
-    // Remove previous (if any)
-    localforage.removeItem(filename);
-    // Save the new file
-    localforage.setItem(filename, contents).then(listSongs);
+    storeSong(filename, contents);
   };
   reader.readAsArrayBuffer(file);
 }
 
+function loadSongFromUrl(e) {
+  statusDiv.innerText = "Clicked load";
+  var url = urlField.value;
+  var name = nameField.value;
+  urlField.value = '';
+  nameField.value = '';
+
+  var xhttp= new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      storeSong(name, xhttp.response);
+    }
+  };
+  xhttp.responseType = "arraybuffer";
+  xhttp.open("GET", url, true);
+  xhttp.send();
+  statusDiv.innerText = "Request running";
+}
+
+function storeSong(name, buffer) {
+  statusDiv.innerText = "Storing " + name;
+  // Remove previous (if any)
+  localforage.removeItem(name);
+  statusDiv.innerText = "Storing... " + name;
+  localforage.setItem(name, buffer).then(listSongs);
+}
+
+
 function listSongs() {
-  listing = document.getElementById('listing');
+  statusDiv.innerText = "Listing";
   listing.innerText = 'Loading...';
   localforage.keys().then(
-    keys => {
+    function(keys) {
       if (keys.length > 0) {
         listing.innerText = "";
-        for (const k of keys) {
+        for (var k of keys) {
           listSong(listing, k);
         }
       } else {
         listing.innerText = "No songs";
       }
-    });
+    }
+  );
 }
 
 function clickPlayCallback(key) {
-  return () => {
-    localforage.getItem(key).then(value => {
-      document.getElementById("playing").innerText = key;
-      const audio = document.getElementById("player");
+  return function() {
+    statusDiv.innerText = "Playing " + key;
+    localforage.getItem(key).then(
+      function(value) {
       audio.src = window.URL.createObjectURL(new Blob([value]));
       audio.play();
     });
-  }
+  };
 }
 
 function clickRemoveSong(key) {
-  return () => localforage.removeItem(key).then(listSongs);
+  return function() {
+    localforage.removeItem(key).then(listSongs);
+  };
 }
 
 function listSong(listing, key) {
-  var p = document.createElement('p');
+  var a = document.createElement('a');
   var label = document.createElement('span');
-  var spacer = document.createElement('span');
   var button = document.createElement('button');
   var rm = document.createElement('button');
 
+  a.classList.add('panel-block');
   label.innerText = key;
-  spacer.innerHTML= '&nbsp;&nbsp;';
+  label.className = 'is-size-5';
   button.addEventListener('click', clickPlayCallback(key));
-  button.innerText = "♫";
+  button.innerText = "♫ Play";
+  button.className = "button is-small is-primary is-light has-text-weight-bold mr-1";
   rm.addEventListener('click', clickRemoveSong(key));
-  rm.innerText = 'x';
+  rm.className = "delete is-small mr-4";
 
-  listing.appendChild(p);
-  p.appendChild(button);
-  p.appendChild(rm);
-  p.appendChild(spacer);
-  p.appendChild(label);
+  listing.appendChild(a);
+  a.appendChild(button);
+  a.appendChild(rm);
+  a.appendChild(label);
 }
 
 listSongs();
 
 document.getElementById('song-from-file').addEventListener('change', loadSongFromFile, false);
+document.getElementById('load-song-url').addEventListener('click', loadSongFromUrl, false);
 
+statusDiv.innerText = "Script loaded";

@@ -4,41 +4,134 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*" />
     <title>LocalStorage Audio</title>
-    <!--
-    <link rel="stylesheet" href="./style.css">
-    -->
+    <link rel="stylesheet" href="assets/bulma.min.css">
   </head>
   <body>
-    <main>
-      <h1>LocalStorage Audio</h1>
-      <audio controls id="player"></audio>
-      <h5 id="playing"></h5>
+    <section class="section">
+      <div class="columns">
+        <div class="column">
+          <nav class="panel">
+            <p class="panel-heading">
+            Now Playing
+            </p>
+            <p class="has-text-centered">
+              <audio class="m-4" controls id="player"></audio>
+            </p>
+          </nav>
+        </div>
 
-      <br />
-      <br />
-      <br />
+        <div class="column">
+          <nav class="panel">
+            <p class="panel-heading">
+            Available Music
+            </p>
+            <div id="listing"></div>
+          </nav>
+        </div>
+      </div>
+    </section>
 
-      <hr />
+    <section class="section">
+      <form action="javascript:void(0);">
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control">
+              <h3 class="subtitle is-5">Load audio from URL</h3>
+              </p>
+            </div>
+          </div>
+        </div>
 
-      <br />
-      <br />
-      <br />
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">Name</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control">
+              <input class="input" id="song-name" value="Demo" />
+              </p>
+            </div>
+          </div>
+        </div>
 
-      <div id="listing"></div>
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+            <label class="label">URL</label>
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control">
+              <input class="input" id="song-url" value="songs/demo.mp3" />
+              </p>
+            </div>
+          </div>
+        </div>
 
-      <br />
-      <br />
-      <br />
+        <div class="field is-horizontal">
+          <div class="field-label is-normal">
+          </div>
+          <div class="field-body">
+            <div class="field">
+              <p class="control">
+              <input class="button is-primary" type="submit" id="load-song-url" value="Load" />
+              </p>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
 
-      <hr />
-      <p>Load a song from disk:
-      <input type="file" id="song-from-file" accept="audio/*,.mp4,.mp3" />
+    <section class="section">
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+        </div>
+        <div class="field-body">
+          <div class="field">
+            <p class="control">
+            <h3 class="subtitle is-5">Load audio from disk</h3>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="field is-horizontal">
+        <div class="field-label is-normal">
+        </div>
+        <div class="field-body">
+          <div class="field">
+            <p class="control">
+            <div class="file">
+              <label class="file-label">
+                <input class="file-input" type="file" id="song-from-file" accept="audio/*,.mp4,.mp3" />
+                <span class="file-cta">
+                  <span class="file-label">
+                    Choose a file…
+                  </span>
+                </span>
+              </label>
+            </div>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p class="has-text-centered is-size-4">
+      LocalStorage Music
       </p>
-    </main>
+      <p class="has-text-centered">
+      Status: <span id="status"></span>
+      </p>
+    </footer>
   </body>
-
   <script src="assets/localforage.min.js"></script>
-	<script src="index.js"></script>
+  <script src="index.js"></script>
 </html>
 
